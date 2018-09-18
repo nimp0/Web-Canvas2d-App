@@ -79,10 +79,10 @@ function MovementLogic() {
     player.xVelocity *= 0.9;
     player.yVelocity *= 0.9;
 
-    LoadImg("pictures/background.png").then(image => {
+    LoadImg("Pictures/background.png").then(image => {
         context.drawImage(image, 0, 0, canvas.width, canvas.height);
     });
-    LoadImg("pictures/hero.png").then(image => {
+    LoadImg("Pictures/hero.png").then(image => {
         context.drawImage(image, player.xPos, player.yPos, player.width, player.height);
     });
 
