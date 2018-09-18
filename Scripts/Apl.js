@@ -15,7 +15,7 @@ canvas.height = window.innerHeight;
 
 var player = {
     xPos: 0,
-    yPos: 0,
+    yPos: 200,
     xVelocity: 0,
     yVelocity: 0,
     height: 70,
@@ -47,21 +47,46 @@ var controller = {
 
 function MovementLogic() {
 
+    LoadImg("Pictures/background.png").then(image => {
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    });
+    
+    player.xPos += player.xVelocity;
+    player.yPos += player.yVelocity;
+    player.xVelocity *= 0.9;
+    player.yVelocity *= 0.9;
+
     if (controller.left) {
+        LoadImg("Pictures/leftrun.png").then(image => {
+            context.drawImage(image, player.xPos, player.yPos, player.width, player.height);
+        });
         player.xVelocity -= 2;
     }
-    if (controller.right) {
+
+    else if (controller.right) {
+        LoadImg("Pictures/rightrun.png").then(image => {
+            context.drawImage(image, player.xPos, player.yPos, player.width, player.height);
+        });
         player.xVelocity += 2;
     }
+
+    else {
+        LoadImg("Pictures/passive.png").then(image => {
+            context.drawImage(image, player.xPos, player.yPos, player.width, player.height);
+        });
+    }
+
     if (controller.up && player.jump == false) {
-        player.yVelocity -= 50;
+        
+        player.yVelocity -= 40;
         player.jump = true;
     }
 
-    if (player.yPos + player.height >= canvas.height) {
-        player.yPos = canvas.height - player.height + 10;
+    if (player.yPos + player.height >= canvas.height - 150) {
+        player.yPos = canvas.height - 125 - player.height;
         player.jump = false;
     }
+
     else {
         player.yPos += 20;
     }
@@ -73,18 +98,6 @@ function MovementLogic() {
     if (player.xPos - player.width <= 0) {
         player.xPos = 0 + player.width;
     }
-
-    player.xPos += player.xVelocity;
-    player.yPos += player.yVelocity;
-    player.xVelocity *= 0.9;
-    player.yVelocity *= 0.9;
-
-    LoadImg("Pictures/background.png").then(image => {
-        context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    });
-    LoadImg("Pictures/hero.png").then(image => {
-        context.drawImage(image, player.xPos, player.yPos, player.width, player.height);
-    });
 
     requestAnimationFrame(MovementLogic);
 }
