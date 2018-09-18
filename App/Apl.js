@@ -1,3 +1,13 @@
+function LoadImg(url) {
+    return new Promise(resolve => {
+        const image = new Image();
+        image.addEventListener("load", () => {
+            resolve(image);
+        });
+        image.src = url;
+    });
+}
+
 var canvas = document.getElementById("myCanvas");
 var context = canvas.getContext('2d');
 canvas.width = window.innerWidth;
@@ -69,23 +79,19 @@ function MovementLogic() {
     player.xVelocity *= 0.9;
     player.yVelocity *= 0.9;
 
-    ImportImg();
-    requestAnimationFrame(MovementLogic);
-}
+    LoadImg("pictures/background.png").then(image => {
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    });
+    LoadImg("pictures/hero.png").then(image => {
+        context.drawImage(image, player.xPos, player.yPos, player.width, player.height);
+    });
 
-function ImportImg() {
-    var hero = new Image();
-    hero.src = "pictures/hero.png";
-    hero.onload = function () {
-        context.clearRect(0, 0, innerWidth, innerHeight);
-        context.drawImage(hero, player.xPos, player.yPos, player.width, player.height);
-    }
+    requestAnimationFrame(MovementLogic);
 }
 
 addEventListener("keydown", controller.keyListener);
 addEventListener("keyup", controller.keyListener);
 requestAnimationFrame(MovementLogic);
-
 
 
 
