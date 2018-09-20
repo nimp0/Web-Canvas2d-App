@@ -1,0 +1,165 @@
+{
+  "rightframes": [
+    {
+      "name": "sprite1",
+      "pos": {
+        "x": 0,
+        "y": 0,
+        "width": 108,
+        "heigth": 140
+      }
+    },
+
+    {
+      "name": "sprite2",
+      "pos": {
+        "x": 108,
+        "y": 0,
+        "width": 108,
+        "heigth": 140
+      }
+    },
+
+    {
+      "name": "sprite3",
+      "pos": {
+        "x": 216,
+        "y": 0,
+        "width": 108,
+        "heigth": 140
+      }
+    },
+
+    {
+      "name": "sprite4",
+      "pos": {
+        "x": 324,
+        "y": 0,
+        "width": 108,
+        "heigth": 140
+      }
+    },
+
+    {
+      "name": "sprite5",
+      "pos": {
+        "x": 432,
+        "y": 0,
+        "width": 108,
+        "heigth": 140
+      }
+    },
+
+    {
+      "name": "sprite6",
+      "pos": {
+        "x": 540,
+        "y": 0,
+        "width": 108,
+        "heigth": 140
+      }
+    },
+
+    {
+      "name": "sprite7",
+      "pos": {
+        "x": 648,
+        "y": 0,
+        "width": 108,
+        "heigth": 140
+      }
+    },
+
+    {
+      "name": "sprite8",
+      "pos": {
+        "x": 756,
+        "y": 0,
+        "width": 108,
+        "heigth": 140
+      }
+    }
+  ],
+
+  "lestframes": [
+    {
+      "name": "sprite1",
+      "pos": {
+        "x": 756,
+        "y": 140,
+        "width": 108,
+        "heigth": 140
+      }
+    },
+
+    {
+      "name": "sprite2",
+      "pos": {
+        "x": 648,
+        "y": 140,
+        "width": 108,
+        "heigth": 140
+      }
+    },
+
+    {
+      "name": "sprite3",
+      "pos": {
+        "x": 540,
+        "y": 140,
+        "width": 108,
+        "heigth": 140
+      }
+    },
+
+    {
+      "name": "sprite4",
+      "pos": {
+        "x": 432,
+        "y": 140,
+        "width": 108,
+        "heigth": 140
+      }
+    },
+
+    {
+      "name": "sprite5",
+      "pos": {
+        "x": 324,
+        "y": 140,
+        "width": 108,
+        "heigth": 140
+      }
+    },
+
+    {
+      "name": "sprite6",
+      "pos": {
+        "x": 216,
+        "y": 140,
+        "width": 108,
+        "heigth": 140
+      }
+    },
+
+    {
+      "name": "sprite7",
+      "pos": {
+        "x": 108,
+        "y": 140,
+        "width": 108,
+        "heigth": 140
+      }
+    },
+
+    {
+      "name": "sprite8",
+      "pos": {
+        "x": 0,
+        "y": 140,
+        "width": 108,
+        "heigth": 140
+      }
+    }
+  ]
+}

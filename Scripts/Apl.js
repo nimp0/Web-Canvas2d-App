@@ -1,3 +1,8 @@
+var canvas = document.getElementById("myCanvas");
+var context = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
 function LoadImg(url) {
     return new Promise(resolve => {
         const image = new Image();
@@ -8,21 +13,108 @@ function LoadImg(url) {
     });
 }
 
-var canvas = document.getElementById("myCanvas");
-var context = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+/*function Sprite(xPos, yPos, xIndex, yIndex, cols, rows, spriteWidth, spriteHeight) {
+
+        this.xPos = xPos;
+        this.yPos = yPos;
+        this.xIndex = xIndex;
+        this.yIndex = yIndex;
+        this.cols = cols;
+        this.rows = rows;
+        this.spriteWidth = spriteWidth;
+        this.spriteHeight = spriteHeight;
+
+    this.sheet = new Image();
+    this.sheet.src = "Pictures/trump.png";
+
+    this.sheet.onload = function () {
+
+        Animation();
+    }
+
+    function Animation() {
+        this.frames = 0;
+        requestAnimationFrame(Animation);
+
+        if ((++this.frame) % 4 > 0) return;
+        //context.clearRect(0, 0, spriteWidth, spriteHeight);
+        this.xIndex = (this.xIndex + 1) % this.cols;
+
+        if (this.xIndex >= this.cols) {
+            this.xIndex = 0;
+        }
+
+        context.drawImage(sheet,
+            this.xIndex * this.spriteWidth, this.yIndex * this.spriteHeight, this.spriteWidth, this.spriteHeight,
+            this.xPos, this.yPos, this.spriteWidth, this.spriteHeight);
+    }
+}*/
+
+/*var xPos = 400;
+var yPos = 300
+var xIndex = 0;
+var yIndex = 1;
+var cols = 6;
+var rows = 4;
+var spriteWidth = 100;
+var spriteHeight = 100;*/
+
+//var hero = new Sprite(400, 300, 0, 1, 6, 4, 100, 100);
+
+
+//var frame = 0;
+
+/*function Animation() {
+    requestAnimationFrame(Animation);
+
+    if ((++frame) % 10 > 0) return;
+    //context.clearRect(0, 0, spriteWidth, spriteHeight);
+    xIndex = (xIndex + 1) % cols;
+
+    if (xIndex >= cols) {
+        xIndex = 0;
+    }
+
+    context.drawImage(sheet,
+        xIndex * spriteWidth, yIndex * spriteHeight, spriteWidth, spriteHeight,
+        0, 0, spriteWidth, spriteHeight);
+}*/
 
 var player = {
     xPos: 0,
     yPos: 200,
     xVelocity: 0,
-    yVelocity: 0,
+    yVelocity: 1,
     height: 70,
     width: 60,
-    jump: true
+    jump: true,
+
+    xIndex: 0,
+    yIndex: 1,
+    cols: 6,
+    rows: 4,
+    spriteWidth: 100,
+    spriteHeight: 100,
 };
 
+var sheet = new Image();
+sheet.src = "Pictures/trump.png";
+sheet.onload = function () {
+
+    Animation();
+}
+var frame = 0;
+function Animation() {
+    requestAnimationFrame(Animation);
+
+    if ((++frame) % 10 > 0) return;
+    //context.clearRect(0, 0, spriteWidth, spriteHeight);
+    player.xIndex = (player.xIndex + 1) % player.cols;
+
+    if (player.xIndex >= player.cols) {
+        player.xIndex = 0;
+    }
+}
 var controller = {
     left: false,
     right: false,
@@ -48,36 +140,45 @@ var controller = {
 function MovementLogic() {
 
     LoadImg("Pictures/background.png").then(image => {
-        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0, innerWidth, innerHeight);
     });
-    
+
     player.xPos += player.xVelocity;
     player.yPos += player.yVelocity;
-    player.xVelocity *= 0.9;
-    player.yVelocity *= 0.9;
+    player.xVelocity *= 0.8;
+    player.yVelocity *= 0.8;
 
     if (controller.left) {
-        LoadImg("Pictures/leftrun.png").then(image => {
-            context.drawImage(image, player.xPos, player.yPos, player.width, player.height);
+        player.yIndex = 3;
+        LoadImg(sheet.src).then(image => {
+            context.drawImage(image,
+                player.xIndex * player.spriteWidth, player.yIndex * player.spriteHeight, player.spriteWidth, player.spriteHeight,
+                player.xPos, player.yPos, player.spriteWidth, player.spriteHeight);
         });
         player.xVelocity -= 2;
     }
 
     else if (controller.right) {
-        LoadImg("Pictures/rightrun.png").then(image => {
-            context.drawImage(image, player.xPos, player.yPos, player.width, player.height);
+        player.yIndex = 1;
+        LoadImg(sheet.src).then(image => {
+            context.drawImage(image,
+                player.xIndex * player.spriteWidth, player.yIndex * player.spriteHeight, player.spriteWidth, player.spriteHeight,
+                player.xPos, player.yPos, player.spriteWidth, player.spriteHeight);
         });
         player.xVelocity += 2;
     }
 
     else {
-        LoadImg("Pictures/passive.png").then(image => {
-            context.drawImage(image, player.xPos, player.yPos, player.width, player.height);
+        player.yIndex = 0;
+        LoadImg(sheet.src).then(image => {
+            context.drawImage(image,
+                player.xIndex * player.spriteWidth, player.yIndex * player.spriteHeight, player.spriteWidth, player.spriteHeight,
+                player.xPos, player.yPos, player.spriteWidth, player.spriteHeight);
         });
     }
 
     if (controller.up && player.jump == false) {
-        
+
         player.yVelocity -= 40;
         player.jump = true;
     }
@@ -105,6 +206,8 @@ function MovementLogic() {
 addEventListener("keydown", controller.keyListener);
 addEventListener("keyup", controller.keyListener);
 requestAnimationFrame(MovementLogic);
+
+
 
 
 
