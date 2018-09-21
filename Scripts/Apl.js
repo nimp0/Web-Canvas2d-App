@@ -3,7 +3,7 @@ var context = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-const DEFAULT_PLAYER_DATA = {
+const defaultPlayerData = {
     xPos: 0,
     yPos: 200,
     xVelocity: 0,
@@ -21,7 +21,7 @@ const DEFAULT_PLAYER_DATA = {
 };
 
 function CreatePlayerData() {
-    return {...DEFAULT_PLAYER_DATA };
+    return { ...defaultPlayerData };
 }
 
 function LoadImg(url) {
@@ -34,10 +34,10 @@ function LoadImg(url) {
     });
 }
 
-let GLOBAL_BACKGROUND_IMAGE = null;
-let GLOBAL_PLAYER_IMAGE = null;
+let backgroundImage = null;
+let playerImage = null;
 
-const ASSET_STATE_DATA = {
+const assetStateData = {
     "Pictures/background.png": null,
     "Pictures/trump.png": null
 };
@@ -46,15 +46,15 @@ let currentPlayer = CreatePlayerData();
 console.log(currentPlayer);
 
 ON_ALL_ASSETS_LOADED = () => {
-    GLOBAL_BACKGROUND_IMAGE = ASSET_STATE_DATA["Pictures/background.png"];
-    GLOBAL_PLAYER_IMAGE = ASSET_STATE_DATA["Pictures/trump.png"];
+    backgroundImage = assetStateData["Pictures/background.png"];
+    playerImage = assetStateData["Pictures/trump.png"];
     requestAnimationFrame(MovementLogic);
 };
 
 function AreAllAssetsLoaded() {
     let result = true;
-    for (let k in ASSET_STATE_DATA) {
-        if (!ASSET_STATE_DATA[k]) {
+    for (let k in assetStateData) {
+        if (!assetStateData[k]) {
             result = false;
             break;
         }
@@ -65,14 +65,14 @@ function AreAllAssetsLoaded() {
 
 function InitializeAssets() {
     const resolver = ({ image, url }) => {
-        ASSET_STATE_DATA[url] = image;
+        assetStateData[url] = image;
         const isThisAll = AreAllAssetsLoaded();
         if (isThisAll) {
             ON_ALL_ASSETS_LOADED();
         }
     };
 
-    for (let k in ASSET_STATE_DATA) {
+    for (let k in assetStateData) {
         LoadImg(k).then(resolver);
     }
 }
@@ -84,7 +84,6 @@ function PlayAnimation() {
     if ((++currentPlayerAnimationFrame) % 10 > 0) {
         return;
     }
-    //context.clearRect(0, 0, spriteWidth, spriteHeight);
     currentPlayer.xIndex = (currentPlayer.xIndex + 1) % currentPlayer.cols;
 
     if (currentPlayer.xIndex >= currentPlayer.cols) {
@@ -126,7 +125,7 @@ function RenderPlayer() {
     const dw = currentPlayer.spriteWidth;
     const dh = currentPlayer.spriteHeight;
 
-    context.drawImage(GLOBAL_PLAYER_IMAGE, sx, sy, sw, sh, x, y, dw, dh);
+    context.drawImage(playerImage, sx, sy, sw, sh, x, y, dw, dh);
 }
 
 function MovementLogic() {
@@ -165,16 +164,16 @@ function MovementLogic() {
         currentPlayer.yPos += 20;
     }
 
-    if (currentPlayer.xPos + currentPlayer.width >= currentPlayer.width) {
-        currentPlayer.xPos = currentPlayer.width - currentPlayer.width;
+    if (currentPlayer.xPos + currentPlayer.width >= canvas.width) {
+        currentPlayer.xPos = canvas.width - currentPlayer.width;
     }
 
     if (currentPlayer.xPos - currentPlayer.width <= 0) {
         currentPlayer.xPos = 0 + currentPlayer.width;
     }
-    
+
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(GLOBAL_BACKGROUND_IMAGE, 0, 0, innerWidth, innerHeight);
+    context.drawImage(backgroundImage, 0, 0, innerWidth, innerHeight);
 
     PlayAnimation();
     RenderPlayer();
