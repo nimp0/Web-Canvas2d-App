@@ -3,7 +3,10 @@ var context = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-const defaultPlayerData = {
+const playerKey = "player";
+const enemyKey = "enemy";
+
+const playerData = {
     xPos: 0,
     yPos: 200,
     xVelocity: 0,
@@ -20,8 +23,30 @@ const defaultPlayerData = {
     spriteHeight: 100,
 };
 
-function CreatePlayerData() {
-    return { ...defaultPlayerData };
+const enemyData = {
+    xPos: 600,
+    yPos: 200,
+    xVelocity: 0,
+    yVelocity: 0,
+    height: 70,
+    width: 60,
+    //jump: true,
+
+    xIndex: 0,
+    yIndex: 0,
+    cols: 10,
+    rows: 1,
+    spriteWidth: 200,
+    spriteHeight: 312,
+}
+
+function CreateUnitData(unitKey) {
+    if (unitKey == playerKey) {
+        return { ...playerData };
+    }
+    if (unitKey == enemyKey) {
+        return { ...enemyData }
+    }
 }
 
 function LoadImg(url) {
@@ -36,18 +61,23 @@ function LoadImg(url) {
 
 let backgroundImage = null;
 let playerImage = null;
+let enemyImage = null;
 
 const assetStateData = {
     "Pictures/background.png": null,
-    "Pictures/trump.png": null
+    "Pictures/trump.png": null,
+    "Pictures/walkingdead.png": null
 };
 
-let currentPlayer = CreatePlayerData();
-console.log(currentPlayer);
+let player = CreateUnitData("player");
+let enemy = CreateUnitData("enemy");
+console.log(player);
+console.log(enemy);
 
 ON_ALL_ASSETS_LOADED = () => {
     backgroundImage = assetStateData["Pictures/background.png"];
     playerImage = assetStateData["Pictures/trump.png"];
+    enemyImage = assetStateData["Pictures/walkingdead.png"]
     requestAnimationFrame(MovementLogic);
 };
 
@@ -79,15 +109,15 @@ function InitializeAssets() {
 
 InitializeAssets();
 
-let currentPlayerAnimationFrame = 0;
-function PlayAnimation() {
-    if ((++currentPlayerAnimationFrame) % 10 > 0) {
+let currAnimationFrame = 0;
+function PlayAnimation(unit) {
+    if ((++currAnimationFrame) % 10 > 0) {
         return;
     }
-    currentPlayer.xIndex = (currentPlayer.xIndex + 1) % currentPlayer.cols;
+    unit.xIndex = (unit.xIndex + 1) % unit.cols;
 
-    if (currentPlayer.xIndex >= currentPlayer.cols) {
-        currentPlayer.xIndex = 0;
+    if (unit.xIndex >= unit.cols) {
+        unit.xIndex = 0;
     }
 }
 
@@ -113,70 +143,73 @@ var controller = {
     }
 }
 
-function RenderPlayer() {
-    const sx = currentPlayer.xIndex * currentPlayer.spriteWidth;
-    const sy = currentPlayer.yIndex * currentPlayer.spriteHeight;
-    const sw = currentPlayer.spriteWidth;
-    const sh = currentPlayer.spriteHeight;
+function Render(unit, unitImage) {
+    const sx = unit.xIndex * unit.spriteWidth;
+    const sy = unit.yIndex * unit.spriteHeight;
+    const sw = unit.spriteWidth;
+    const sh = unit.spriteHeight;
 
-    const x = currentPlayer.xPos;
-    const y = currentPlayer.yPos;
+    const x = unit.xPos;
+    const y = unit.yPos;
 
-    const dw = currentPlayer.spriteWidth;
-    const dh = currentPlayer.spriteHeight;
+    const dw = unit.spriteWidth;
+    const dh = unit.spriteHeight;
 
-    context.drawImage(playerImage, sx, sy, sw, sh, x, y, dw, dh);
+    context.drawImage(unitImage, sx, sy, sw, sh, x, y, dw, dh);
 }
 
 function MovementLogic() {
 
-    currentPlayer.xPos += currentPlayer.xVelocity;
-    currentPlayer.yPos += currentPlayer.yVelocity;
-    currentPlayer.xVelocity *= 0.8;
-    currentPlayer.yVelocity *= 0.8;
+    player.xPos += player.xVelocity;
+    player.yPos += player.yVelocity;
+    player.xVelocity *= 0.8;
+    player.yVelocity *= 0.8;
+    enemy.xPos -= 2;
 
     if (controller.left) {
-        currentPlayer.yIndex = 3;
-        currentPlayer.xVelocity -= 2;
+        player.yIndex = 3;
+        player.xVelocity -= 2;
     }
 
     else if (controller.right) {
-        currentPlayer.yIndex = 1;
-        currentPlayer.xVelocity += 2;
+        player.yIndex = 1;
+        player.xVelocity += 2;
     }
 
     else {
-        currentPlayer.yIndex = 0;
+        player.yIndex = 0;
     }
 
-    if (controller.up && currentPlayer.jump == false) {
+    if (controller.up && player.jump == false) {
 
-        currentPlayer.yVelocity -= 50;
-        currentPlayer.jump = true;
+        player.yVelocity -= 50;
+        player.jump = true;
     }
 
-    if (currentPlayer.yPos + currentPlayer.height >= canvas.height - 150) {
-        currentPlayer.yPos = canvas.height - 125 - currentPlayer.height;
-        currentPlayer.jump = false;
+    if (player.yPos + player.height >= canvas.height - 150) {
+        player.yPos = canvas.height - 125 - player.height;
+        player.jump = false;
     }
 
     else {
-        currentPlayer.yPos += 20;
+        player.yPos += 20;
     }
 
-    if (currentPlayer.xPos + currentPlayer.width >= canvas.width) {
-        currentPlayer.xPos = canvas.width - currentPlayer.width;
+    if (player.xPos + player.width >= canvas.width) {
+        player.xPos = canvas.width - player.width;
     }
 
-    if (currentPlayer.xPos - currentPlayer.width <= 0) {
-        currentPlayer.xPos = 0 + currentPlayer.width;
+    if (player.xPos - player.width <= 0) {
+        player.xPos = 0 + player.width;
     }
 
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.drawImage(backgroundImage, 0, 0, innerWidth, innerHeight);
 
-    PlayAnimation();
-    RenderPlayer();
+    PlayAnimation(player);
+    PlayAnimation(enemy);
+    Render(player, playerImage);
+    Render(enemy, enemyImage);
 
     requestAnimationFrame(MovementLogic);
 }
