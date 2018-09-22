@@ -7,6 +7,7 @@ const playerKey = "player";
 const enemyKey = "enemy";
 
 const playerData = {
+    unitCurrAnimFrame: 0,
     xPos: 0,
     yPos: 200,
     xVelocity: 0,
@@ -24,8 +25,9 @@ const playerData = {
 };
 
 const enemyData = {
+    unitCurrAnimFrame: 0,
     xPos: 600,
-    yPos: 200,
+    yPos: 240,
     xVelocity: 0,
     yVelocity: 0,
     height: 70,
@@ -69,8 +71,8 @@ const assetStateData = {
     "Pictures/walkingdead.png": null
 };
 
-let player = CreateUnitData("player");
-let enemy = CreateUnitData("enemy");
+let player = CreateUnitData(playerKey);
+let enemy = CreateUnitData(enemyKey);
 console.log(player);
 console.log(enemy);
 
@@ -109,9 +111,8 @@ function InitializeAssets() {
 
 InitializeAssets();
 
-let currAnimationFrame = 0;
 function PlayAnimation(unit) {
-    if ((++currAnimationFrame) % 10 > 0) {
+    if ((++unit.unitCurrAnimFrame) % 10 > 0) {
         return;
     }
     unit.xIndex = (unit.xIndex + 1) % unit.cols;
@@ -208,6 +209,7 @@ function MovementLogic() {
 
     PlayAnimation(player);
     PlayAnimation(enemy);
+
     Render(player, playerImage);
     Render(enemy, enemyImage);
 
